@@ -1,7 +1,8 @@
 #!/bin/bash
 
-echo "🚀 Starter installasjon av dependencies..." >&2
-pip install -r requirements.txt >&2
+echo "🚀 Starter installasjon av dependencies..."
+python -m pip install --upgrade pip
+pip install -r requirements.txt
 
-echo "✅ Dependencies installert, starter app..." >&2
-gunicorn --bind=0.0.0.0:8000 api:app
+echo "✅ Dependencies installert, starter app..."
+exec gunicorn --bind=0.0.0.0:8000 api:app
