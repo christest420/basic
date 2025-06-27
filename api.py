@@ -1,19 +1,27 @@
+import os
 from flask import Flask, request, Response
-from botbuilder.core import BotFrameworkAdapter, BotFrameworkAdapterSettings, TurnContext
+from botbuilder.core import (
+    BotFrameworkAdapter,
+    BotFrameworkAdapterSettings,
+    TurnContext
+)
 from botbuilder.schema import Activity
 
 app = Flask(__name__)
 
-# Konfigurer adapter
-adapter_settings = BotFrameworkAdapterSettings("", "")
+# Hent App ID og Password fra miljøvariabler (satt i Azure)
+APP_ID = os.environ.get("MicrosoftAppId", "")
+APP_PASSWORD = os.environ.get("MicrosoftAppPassword", "")
+
+adapter_settings = BotFrameworkAdapterSettings(APP_ID, APP_PASSWORD)
 adapter = BotFrameworkAdapter(adapter_settings)
 
-# Standard GET-endepunkt for enkel testing i nettleser
+# GET-endepunkt for enkel testing
 @app.route("/", methods=["GET"])
 def root():
     return "Bot API kjører OK!"
 
-# Bot-endepunkt for meldinger
+# POST-endepunkt for Bot Framework
 @app.route("/api/messages", methods=["POST"])
 def messages():
     if "application/json" in request.headers["Content-Type"]:
