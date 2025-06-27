@@ -1,4 +1,6 @@
-name: Deploy Python app to Azure Web App - fpchat-ordrestatus
+# Deploy Python app til Azure Web App (fpchat-ordrestatus)
+
+name: Build and deploy Python app to Azure Web App - fpchat-ordrestatus
 
 on:
   push:
@@ -7,21 +9,58 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python version
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: 'Deploy to Azure Web App'
+      - name: Create and activate virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Make startup.sh executable
+        run: chmod +x startup.sh
+
+      - name: Zip artifact for deployment
+        run: zip release.zip ./* -r -x "venv/*"
+
+      - name: Upload artifact for deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-app
+          path: |
+            release.zip
+            !venv/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: python-app
+
+      - name: Unzip artifact for deployment
+        run: unzip release.zip
+
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'fpchat-ordrestatus'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0C1DFF7A174842BBB4958EDBFBD5C49C }}
-          package: .
