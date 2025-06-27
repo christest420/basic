@@ -1,5 +1,5 @@
 fastapi==0.110.0
 uvicorn==0.29.0
 gunicorn==22.0.0
-botbuilder-core==4.19.5
-botbuilder-schema==4.19.5
+botbuilder-core==4.17.0
+botbuilder-schema==4.17.0
