@@ -1,7 +1,5 @@
-flask
-fastapi
-uvicorn
-aiohttp
-botbuilder-core>=4.14.1
-botbuilder-schema>=4.14.1
-gunicorn
+fastapi==0.110.0
+uvicorn==0.29.0
+gunicorn==22.0.0
+botbuilder-core==4.19.5
+botbuilder-schema==4.19.5
