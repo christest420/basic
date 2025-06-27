@@ -24,7 +24,3 @@ def messages():
 
     task = adapter.process_activity(activity, "", aux_func)
     return Response(status=202)
-
-    if __name__ == "__main__":
-    app.run()
-
