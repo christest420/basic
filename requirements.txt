@@ -1,4 +1,6 @@
 flask
+fastapi
+uvicorn
 aiohttp
 botbuilder-core>=4.14.1
 botbuilder-schema>=4.14.1
